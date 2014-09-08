@@ -30,6 +30,10 @@ case class EventBrief (
   def isToday = {
     start.toLocalDate.equals(LocalDate.today)
   }
+
+  def isPassed = {
+    end isBefore DateTime.now
+  }
 }
 
 object EventBrief extends FormDelegate[EventBrief] {

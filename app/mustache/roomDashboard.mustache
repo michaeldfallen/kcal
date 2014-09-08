@@ -3,13 +3,11 @@
 {{$title}}kcal - Room Dashboard{{/title}}
 
 {{$content}}
-  <p>The room dashboard</p>
-  <p>Room ID - {{room.email}}</p>
-  <p>Display Name - {{room.displayName}}</p>
-  <p>Alias - {{room.alias}}</p>
+  <h1>{{room.displayName}}</h1>
 
   {{#status.currentEvent}}
     <div>
+      <h2>Current meeting</h2>
       <ul>
         <li>{{subject}}</li>
         <li>{{startTimeString}}</li>
@@ -20,16 +18,19 @@
   <p>Available - {{status.available}}</p>
   <p>{{status.durationMessage}}</p>
 
-  <ul>
-  {{#eventsList}}
-    <li>
-      <span>{{subject}}</span>
-      <span>{{startTimeString}}</span>
-      <span>{{endTimeString}}</span>
-      <span>{{durationString}}</span>
-    </li>
-  {{/eventsList}}
-  </ul>
+  <div>
+    <h2>Upcoming Meetings</h2>
+    <ul>
+    {{#eventsList}}
+      <li class="{{#isPassed}}passed{{/isPassed}}">
+        <span>{{subject}}</span>
+        <span>{{startTimeString}}</span>
+        <span>{{endTimeString}}</span>
+        <span>{{durationString}}</span>
+      </li>
+    {{/eventsList}}
+    </ul>
+  </div>
 
 {{/content}}
 
