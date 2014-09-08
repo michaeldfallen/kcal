@@ -8,6 +8,29 @@
   <p>Display Name - {{room.displayName}}</p>
   <p>Alias - {{room.alias}}</p>
 
+  {{#status.currentEvent}}
+    <div>
+      <ul>
+        <li>{{subject}}</li>
+        <li>{{startTimeString}}</li>
+        <li>{{endTimeString}}</li>
+      </ul>
+    </div>
+  {{/status.currentEvent}}
+  <p>Available - {{status.available}}</p>
+  <p>{{status.durationMessage}}</p>
+
+  <ul>
+  {{#eventsList}}
+    <li>
+      <span>{{subject}}</span>
+      <span>{{startTimeString}}</span>
+      <span>{{endTimeString}}</span>
+      <span>{{durationString}}</span>
+    </li>
+  {{/eventsList}}
+  </ul>
+
 {{/content}}
 
 {{/template/main}}

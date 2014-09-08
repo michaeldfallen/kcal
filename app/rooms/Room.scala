@@ -1,8 +1,7 @@
 package rooms
 
-import play.api.data._
-import play.api.data.Forms._
-import play.api.libs.json.JsValue
+import play.FormDelegate
+import com.github.nscala_time.time.Imports._
 
 case class Room (
     val email: String
@@ -18,7 +17,9 @@ case class RoomDetails (
     alias: String
 ) extends BaseRoomDetail
 
-object RoomDetails {
+object RoomDetails extends FormDelegate[RoomDetails] {
+  import playMappings._
+
   val form = Form(
     mapping(
       "Id"          -> text,
@@ -26,6 +27,4 @@ object RoomDetails {
       "Alias"       -> text
     ) (RoomDetails.apply) (RoomDetails.unapply)
   )
-
-  def bind(js: JsValue) = form.bind(js)
 }

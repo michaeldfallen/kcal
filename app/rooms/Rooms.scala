@@ -2,9 +2,9 @@ package rooms
 
 import config.Config
 import office365.Office365
-import scala.util.{Success, Failure}
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import org.joda.time.DateTime
 
 object Rooms {
   def allRooms(): Seq[Room] = {

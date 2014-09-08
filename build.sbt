@@ -9,5 +9,6 @@ lazy val root = (project in file("."))
 scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
-  ws
+  ws,
+  "com.github.nscala-time" %% "nscala-time" % "1.4.0"
 )
