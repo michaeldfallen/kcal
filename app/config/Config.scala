@@ -6,9 +6,16 @@ import play.api.libs.Crypto
 object Config {
   private lazy val configuration = play.Play.application.configuration
 
-  def belfastRoomsConfig: Seq[String] = {
+  lazy val belfastRoomsList = rooms("kcal.rooms.belfast")
+  lazy val londonRoomsList = rooms("kcal.rooms.london")
+  lazy val gdanskRoomsList = rooms("kcal.rooms.gdansk")
+  lazy val derryRoomsList = rooms("kcal.rooms.derry")
+  lazy val bristolRoomsList = rooms("kcal.rooms.bristol")
+  lazy val dublinRoomsList = rooms("kcal.rooms.dublin")
+
+  def rooms(key:String): Seq[String] = {
     configuration
-      .getList("kcal.rooms.belfast")
+      .getList(key)
       .toSeq
       .map( obj => obj.toString )
   }

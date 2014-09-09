@@ -29,11 +29,12 @@ object RoomsListPresenter extends Controller with PlayImplicits {
   }
 
   case class RoomsList(
+    title: String,
     rooms: Seq[RoomListItem]
   ) extends mustache.roomsList
 
   object RoomsList {
-    def apply(rooms: Seq[Room]): Future[RoomsList] = {
+    def apply(title: String, rooms: Seq[Room]): Future[RoomsList] = {
       val futureRoomList = Future.sequence(
         rooms.par.map { room =>
           val details = Rooms.roomDetails(room)
@@ -48,7 +49,7 @@ object RoomsListPresenter extends Controller with PlayImplicits {
         }.seq
       )
       futureRoomList.map { list =>
-        RoomsList(list)
+        RoomsList(title, list)
       }
     }
   }
@@ -57,13 +58,37 @@ object RoomsListPresenter extends Controller with PlayImplicits {
     Action.async {
       office match {
         case "belfast" => {
-          val roomsList = RoomsList(Rooms.belfastRooms())
+          val roomsList = RoomsList("Belfast Meeting Rooms", Rooms.belfastRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
+        }
+        case "london" => {
+          val roomsList = RoomsList("London Meeting Rooms", Rooms.londonRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
+        }
+        case "gdansk" => {
+          val roomsList = RoomsList("Gdansk Meeting Rooms", Rooms.gdanskRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
+        }
+        case "derry" => {
+          val roomsList = RoomsList("Derry Meeting Rooms", Rooms.derryRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
+        }
+        case "bristol" => {
+          val roomsList = RoomsList("Bristol Meeting Rooms", Rooms.bristolRooms())
           roomsList.map { rooms =>
             Ok(rooms)
           }
         }
         case "all" => {
-          val roomsList = RoomsList(Rooms.allRooms())
+          val roomsList = RoomsList("All Meeting Rooms", Rooms.allRooms())
           roomsList.map { rooms =>
             Ok(rooms)
           }
