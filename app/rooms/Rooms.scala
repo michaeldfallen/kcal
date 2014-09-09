@@ -8,35 +8,14 @@ import org.joda.time.DateTime
 
 object Rooms {
   def allRooms(): Seq[Room] = {
-    belfastRooms() ++ londonRooms() ++ gdanskRooms() ++ derryRooms() ++ bristolRooms()
-  }
-
-  def belfastRooms(): Seq[Room] = {
-    Config.belfastRoomsList.map { item =>
-      Room(item)
+    val seqOfRooms = Config.roomGroups.map {
+      case (key, id) => rooms(id)
     }
+    seqOfRooms.flatten.toSeq
   }
 
-  def londonRooms(): Seq[Room] = {
-    Config.londonRoomsList.map { item =>
-      Room(item)
-    }
-  }
-
-  def gdanskRooms(): Seq[Room] = {
-    Config.gdanskRoomsList.map { item =>
-      Room(item)
-    }
-  }
-
-  def derryRooms(): Seq[Room] = {
-    Config.derryRoomsList.map { item =>
-      Room(item)
-    }
-  }
-
-  def bristolRooms(): Seq[Room] = {
-    Config.bristolRoomsList.map { item =>
+  def rooms(configId: String): Seq[Room] = {
+    Config.roomsList(configId).map { item =>
       Room(item)
     }
   }

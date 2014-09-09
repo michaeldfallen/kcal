@@ -9,6 +9,7 @@ import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import rooms._
 import events._
+import config.Config
 
 object RoomsListPresenter extends Controller with PlayImplicits {
 
@@ -56,39 +57,15 @@ object RoomsListPresenter extends Controller with PlayImplicits {
 
   def roomsList(office: String) = Cached(_ => s"roomsList.$office", duration = 60) {
     Action.async {
-      office match {
-        case "belfast" => {
-          val roomsList = RoomsList("Belfast Meeting Rooms", Rooms.belfastRooms())
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
-        }
-        case "london" => {
-          val roomsList = RoomsList("London Meeting Rooms", Rooms.londonRooms())
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
-        }
-        case "gdansk" => {
-          val roomsList = RoomsList("Gdansk Meeting Rooms", Rooms.gdanskRooms())
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
-        }
-        case "derry" => {
-          val roomsList = RoomsList("Derry Meeting Rooms", Rooms.derryRooms())
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
-        }
-        case "bristol" => {
-          val roomsList = RoomsList("Bristol Meeting Rooms", Rooms.bristolRooms())
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
-        }
-        case "all" => {
+      (office, Config.roomGroups.get(office)) match {
+        case ("all", _) => {
           val roomsList = RoomsList("All Meeting Rooms", Rooms.allRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
+        }
+        case (_, Some(id)) => {
+          val roomsList = RoomsList(s"${office.capitalize} Meeting Rooms", Rooms.rooms(id))
           roomsList.map { rooms =>
             Ok(rooms)
           }

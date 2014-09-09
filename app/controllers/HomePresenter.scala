@@ -4,16 +4,19 @@ import play.api.mvc._
 import play.api.cache.Cached
 import play.api.Play.current
 import io.michaelallen.mustache.PlayImplicits
+import config.Config
 
 object HomePresenter extends Controller with PlayImplicits {
 
+  case class RoomUrl(name: String, url: String)
+
+  val urls = Config.roomGroups.map {
+    case (key, _) => RoomUrl(s"${key.capitalize} Meeting Rooms", routes.RoomsListPresenter.roomsList(key).url)
+  }.toSeq.sortBy(_.name)
+
   case class Home(
       allRoomsUrl: String = routes.RoomsListPresenter.roomsList("all").url,
-      belfastRoomsUrl: String = routes.RoomsListPresenter.roomsList("belfast").url,
-      londonRoomsUrl: String = routes.RoomsListPresenter.roomsList("london").url,
-      gdanskRoomsUrl: String = routes.RoomsListPresenter.roomsList("gdansk").url,
-      derryRoomsUrl: String = routes.RoomsListPresenter.roomsList("derry").url,
-      bristolRoomsUrl: String = routes.RoomsListPresenter.roomsList("bristol").url
+      urls: Seq[RoomUrl] = urls
   ) extends mustache.home
 
   def index = Cached(_ => "homePage", duration = 500) {
