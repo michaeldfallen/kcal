@@ -2,6 +2,8 @@ package controllers
 
 import play.api._
 import play.api.mvc._
+import play.api.cache.Cached
+import play.api.Play.current
 import io.michaelallen.mustache.PlayImplicits
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -51,28 +53,23 @@ object RoomsListPresenter extends Controller with PlayImplicits {
     }
   }
 
-  def roomsList = Action.async {
-    val roomsList = RoomsList(Rooms.allRooms())
-    roomsList.map { rooms =>
-      Ok(rooms)
-    }
-  }
-
-  def roomsList(office: String) = Action.async {
-    office match {
-      case "belfast" => {
-        val roomsList = RoomsList(Rooms.belfastRooms())
-        roomsList.map { rooms =>
-          Ok(rooms)
+  def roomsList(office: String) = Cached(_ => s"roomsList.$office", duration = 60) {
+    Action.async {
+      office match {
+        case "belfast" => {
+          val roomsList = RoomsList(Rooms.belfastRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
         }
-      }
-      case "all" => {
-        val roomsList = RoomsList(Rooms.allRooms())
-        roomsList.map { rooms =>
-          Ok(rooms)
+        case "all" => {
+          val roomsList = RoomsList(Rooms.allRooms())
+          roomsList.map { rooms =>
+            Ok(rooms)
+          }
         }
+        case _ => Future { Redirect(routes.HomePresenter.index()) }
       }
-      case _ => Future { Redirect(routes.HomePresenter.index()) }
     }
   }
 }

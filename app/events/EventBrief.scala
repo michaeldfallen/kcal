@@ -15,8 +15,10 @@ case class EventBrief (
   def endTimeString = {
     if (end.toLocalDate.equals(LocalDate.today)) {
       end.toString(DateTimeFormat.shortTime())
+    } else if (end.toLocalDate.equals(LocalDate.tomorrow)) {
+      end.toString(DateTimeFormat.shortTime()) + " tomorrow"
     } else {
-      end.toString(DateTimeFormat.shortDateTime())
+      end.toString(DateTimeFormat.forPattern("h:m a EEEEEEEEE"))
     }
   }
   def startTimeString = {

@@ -1,6 +1,8 @@
 package controllers
 
 import play.api.mvc._
+import play.api.cache.Cached
+import play.api.Play.current
 import io.michaelallen.mustache.PlayImplicits
 
 object HomePresenter extends Controller with PlayImplicits {
@@ -10,7 +12,9 @@ object HomePresenter extends Controller with PlayImplicits {
       belfastRoomsUrl: String = routes.RoomsListPresenter.roomsList("belfast").url
   ) extends mustache.home
 
-  def index = Action {
-    Ok(Home())
+  def index = Cached(_ => "homePage", duration = 500) {
+    Action {
+      Ok(Home())
+    }
   }
 }

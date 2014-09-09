@@ -10,5 +10,6 @@ scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
   ws,
+  cache,
   "com.github.nscala-time" %% "nscala-time" % "1.4.0"
 )
