@@ -1,8 +1,23 @@
 package events
 
-import org.joda.time.format.PeriodFormat
+import org.joda.time.format.{PeriodPrinter, PeriodFormatterBuilder}
 import com.github.nscala_time.time.Imports._
 import play.FormDelegate
+import org.joda.time.{Minutes, ReadablePeriod}
+import java.util.Locale
+import java.io.Writer
+
+object PeriodFormat {
+  val roughHoursMins = {
+    new PeriodFormatterBuilder()
+      .appendHours()
+      .appendSuffix(" hr", " hrs")
+      .appendSeparator("", ", ")
+      .appendMinutes()
+      .appendSuffix(" min", " mins")
+      .toFormatter
+  }
+}
 
 case class EventBrief (
     subject: String,
@@ -26,7 +41,11 @@ case class EventBrief (
   }
   def durationString = {
     val duration = (start to end).toPeriod
-    PeriodFormat.getDefault().print(duration)
+    if (duration.toStandardMinutes.isLessThan(5.minutes.toPeriod.toStandardMinutes)) {
+      "a few minutes"
+    } else {
+      PeriodFormat.roughHoursMins.print(duration)
+    }
   }
 
   def isToday = {

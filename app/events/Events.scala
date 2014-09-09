@@ -6,6 +6,7 @@ import rooms.BaseRoomDetail
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.JsArray
+import scala.util.{Failure, Success, Try}
 
 object Events {
 
@@ -13,8 +14,16 @@ object Events {
       room: BaseRoomDetail
   ): Future[Seq[EventBrief]] = {
     Office365.eventsList(room) map { response =>
-      val js = (response.json \ "value").as[JsArray]
-      js.value map { EventBrief.bind(_).get }
+      Try {
+        val js = (response.json \ "value").as[JsArray]
+        js.value map { EventBrief.bind(_).get }
+      } match {
+        case Success(js) => js
+        case Failure(throwable) => {
+          Office365.cacheBustEventsList(room)
+          throw throwable
+        }
+      }
     }
   }
 

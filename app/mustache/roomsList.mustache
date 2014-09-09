@@ -5,20 +5,34 @@
 {{$content}}
 
   <h1>{{title}}</h1>
-  <ul>
+  <ul class="room-list">
   {{#rooms}}
-    <li>
-      <span><a href="{{url}}">{{room.displayName}}</a></span>
-      {{#status.currentEvent}}
-      <span>
-          <ul>
-              <li>{{subject}}</li>
-              <li>{{endTimeString}}</li>
-          </ul>
+    <li class="room-list-item">
+      <span class="name">
+        <a href="{{url}}">{{room.shortDisplayName}}</a>
       </span>
+
+      <span class="current-event">
+      {{#status.currentEvent}}
+        {{#status.available}}
+          Next {{subject}} at {{startTimeString}}
+        {{/status.available}}
+        {{^status.available}}
+          {{subject}} until {{endTimeString}}
+        {{/status.available}}
       {{/status.currentEvent}}
-      <span class="{{#status.available}}busy{{/status.available}}">
-        {{status.durationMessage}}
+      </span>
+
+      <span class="status{{^status.available}}-busy{{/status.available}}">
+        <span class="state">
+          {{#status.available}}Free{{/status.available}}
+          {{^status.available}}Busy{{/status.available}}
+        </span>
+        {{#status.currentEvent}}
+        <span class="event-end">
+            {{status.durationMessage}}
+        </span>
+        {{/status.currentEvent}}
       </span>
     </li>
   {{/rooms}}

@@ -15,7 +15,13 @@ case class RoomDetails (
     val email: String,
     displayName: String,
     alias: String
-) extends BaseRoomDetail
+) extends BaseRoomDetail {
+  def shortDisplayName:String = {
+    displayName
+      .replaceAllLiterally("Belfast", "")
+      .replaceAllLiterally("London", "")
+  }
+}
 
 object RoomDetails extends FormDelegate[RoomDetails] {
   import playMappings._

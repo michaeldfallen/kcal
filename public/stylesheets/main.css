@@ -1,0 +1,103 @@
+html {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  color: #ECF0F1;
+  background: #000;
+  font-size: 17px;
+}
+
+h1 {
+  font-size: 2em;
+  background: #2C3E50;
+  padding: 0.5em;
+  margin-bottom:0.1em;
+}
+
+a {
+  color: #ECF0F1;
+  text-decoration: none;
+}
+
+.room-groups-list {
+  padding: 1em;
+}
+
+.room-groups-list li {
+  background: #000;
+  margin: 0.5em 0;
+  padding: 1em;
+}
+
+.room-list {
+}
+
+.room-list li {
+  margin-bottom:0.2em;
+  width: 49.5%;
+  margin-left: 0.25%;
+  margin-right: 0.25%;
+  height: 4em;
+  background: #2A2A2A;
+  position: relative;
+  display: inline-block;
+  float: left;
+}
+
+.room-list .name {
+  display: block;
+  font-size: 1.2em;
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+  width: 70%;
+}
+.room-list li:after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 30%;
+  z-index: 1;
+  width: 3em;
+  height: 4em;
+  background: linear-gradient(to right, rgba(42, 42, 42, 0), rgba(42, 42, 42, 1) 50%);
+}
+
+.room-list .current-event {
+  color: #7F8C8D;
+  display: block;
+  position: absolute;
+  bottom: 0.5em;
+  left: 0.5em;
+}
+
+.room-list .event-end {
+  display: block;
+  position: absolute;
+  bottom: 0.5em;
+}
+
+.room-list-item .state {
+  font-size: 1.2em;
+}
+
+.room-list-item .status {
+  z-index: 2;
+  width: 30%;
+  background: #27AE60;
+  padding: 0.5em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 3em;
+}
+
+.room-list-item .status-busy {
+  z-index: 2;
+  width: 30%;
+  background: #C0392B;
+  padding: 0.5em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 3em;
+}

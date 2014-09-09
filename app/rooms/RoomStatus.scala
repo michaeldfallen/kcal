@@ -3,8 +3,21 @@ package rooms
 import events.EventBrief
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import org.joda.time.format.PeriodFormat
+import org.joda.time.format.PeriodFormatterBuilder
 import com.github.nscala_time.time.Imports._
+
+
+object PeriodFormat {
+  val roughHoursMins = {
+    new PeriodFormatterBuilder()
+      .appendHours()
+      .appendSuffix(" hr", " hrs")
+      .appendSeparator("", " ")
+      .appendMinutes()
+      .appendSuffix(" min", " mins")
+      .toFormatter
+  }
+}
 
 case class AvailableOrBusyStatus (
     available: Boolean,
@@ -13,12 +26,14 @@ case class AvailableOrBusyStatus (
 ) extends RoomStatus {
 
   def durationMessage = {
-    val printablePeriod = duration.toPeriod.withSeconds(0).withMillis(0)
-    val time = PeriodFormat.getDefault().print(printablePeriod)
+    val eventEndsToday = duration.end.toLocalDate.equals(LocalDate.today)
+    val time = PeriodFormat.roughHoursMins.print(duration.toPeriod)
     if (available) {
-      s"Free for $time"
+      s"For $time"
+    } else if (eventEndsToday) {
+      s"For $time"
     } else {
-      s"Busy for $time"
+      s"All day"
     }
   }
 }
@@ -26,7 +41,7 @@ case class AvailableOrBusyStatus (
 case class FreeAllDayStatus () extends RoomStatus {
   val available = true
   val currentEvent = None
-  def durationMessage = "Free all day"
+  def durationMessage = "For the rest of the day"
 }
 
 trait RoomStatus {

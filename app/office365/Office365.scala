@@ -20,6 +20,9 @@ object Office365 {
 
   implicit def durationToInt(d: Duration): Int = d.toSeconds.toInt
 
+  def cacheBustRoomDetails(room: BaseRoomDetail) = Cache.remove(s"office365.roomDetails.${room.email}")
+  def cacheBustEventsList(room: BaseRoomDetail) = Cache.remove(s"office365.eventsList.${room.email}")
+
   def roomDetails(room: BaseRoomDetail): Future[WSResponse] = {
     val cached = Cache.getAs[WSResponse](s"office365.roomDetails.${room.email}")
     cached.map(Future(_)).getOrElse {
