@@ -3,8 +3,12 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.RoomsListPresenter.roomsList
-GET     /rooms/:office              controllers.RoomsListPresenter.roomsListFiltered(office: String)
+GET     /                           controllers.HomePresenter.index
+GET     /rooms/:office/             controllers.RoomsListPresenter.roomsList(office: String)
+GET     /rooms/:office              controllers.RoomsListPresenter.roomsList(office: String)
+GET     /rooms/                     controllers.RoomsListPresenter.roomsList(office = "")
+GET     /rooms                      controllers.RoomsListPresenter.roomsList(office = "")
+GET     /room/:email/               controllers.RoomDashboardPresenter.roomDashboard(email: String)
 GET     /room/:email                controllers.RoomDashboardPresenter.roomDashboard(email: String)
 
 # Map static resources from the /public folder to the /assets URL path

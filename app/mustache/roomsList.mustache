@@ -5,9 +5,24 @@
 {{$content}}
 
   <h1>All Rooms</h1>
+  <ul>
   {{#rooms}}
-    <p><a href="{{url}}">{{email}}</a></p>
+    <li>
+      <span><a href="{{url}}">{{room.displayName}}</a></span>
+      {{#status.currentEvent}}
+      <span>
+          <ul>
+              <li>{{subject}}</li>
+              <li>{{endTimeString}}</li>
+          </ul>
+      </span>
+      {{/status.currentEvent}}
+      <span class="{{#status.available}}busy{{/status.available}}">
+        {{status.durationMessage}}
+      </span>
+    </li>
   {{/rooms}}
+  </ul>
 
 {{/content}}
 
