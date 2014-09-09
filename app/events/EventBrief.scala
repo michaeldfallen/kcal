@@ -13,7 +13,7 @@ case class EventBrief (
     isCancelled: Boolean
 ) {
   def endTimeString = {
-    if (end == LocalDate.today) {
+    if (end.toLocalDate.equals(LocalDate.today)) {
       end.toString(DateTimeFormat.shortTime())
     } else {
       end.toString(DateTimeFormat.shortDateTime())
