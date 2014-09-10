@@ -17,6 +17,11 @@ a {
   text-decoration: none;
 }
 
+.k-logo {
+  float: right;
+  height: 1em;
+}
+
 .room-groups-list {
   padding: 1em;
 }
@@ -28,6 +33,11 @@ a {
 }
 
 .room-list {
+}
+
+.room-list.few-rooms li {
+  width: 99%;
+  font-size: 1.5em;
 }
 
 .room-list li {
@@ -100,4 +110,70 @@ a {
   right: 0;
   top: 0;
   height: 3em;
+}
+
+.upcoming-meetings {
+  padding: 1em;
+}
+
+.upcoming-meetings h2 {
+  font-size: 1.5em;
+}
+
+.upcoming-meetings li {
+  background: #2A2A2A;
+  display: block;
+  height: 4em;
+  margin-top: 0.5em;
+}
+
+.upcoming-meetings .meeting-time {
+  display: inline-block;
+  height: 3em;
+  float: left;
+  background: #C0392B;
+  padding: 0.5em;
+}
+
+.upcoming-meetings .meeting-time .start {
+  display: block;
+  font-size: 1.5em;
+  padding-bottom: 0.2em;
+  width: 5em;
+}
+
+.upcoming-meetings .meeting-detail {
+  display: block;
+  float: left;
+  padding: 0.5em;
+}
+
+.upcoming-meetings .meeting-detail h3 {
+  font-size: 1.5em;
+  padding-bottom: 0.2em;
+}
+
+.current-meeting {
+  height: 30%;
+  margin: 1em;
+  border-left: 1em solid #27AE60;
+  padding: 0.5em 2em;
+}
+
+.current-meeting h2 {
+  font-size: 5em;
+}
+
+.current-meeting p {
+  font-size: 2em;
+}
+
+.current-meeting.busy {
+  border-left: 1em solid #C0392B;
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 27px;
+  }
 }

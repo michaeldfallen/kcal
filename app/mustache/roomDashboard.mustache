@@ -2,31 +2,41 @@
 
 {{$title}}kcal - Room Dashboard{{/title}}
 
+{{$js}}
+  <script type="text/javascript" src="/assets/javascripts/reload.js"></script>
+{{/js}}
+
 {{$content}}
-  <h1>{{room.displayName}}</h1>
+  <h1>{{room.shortDisplayName}} <img src="/assets/images/Kainos-Logo.png" class="k-logo" /></h1>
 
-  {{#status.currentEvent}}
-    <div>
-      <h2>Current meeting</h2>
-      <ul>
-        <li>{{subject}}</li>
-        <li>{{startTimeString}}</li>
-        <li>{{endTimeString}}</li>
-      </ul>
+  {{^status.available}}
+    <div class="current-meeting busy">
+      <h2>{{status.currentEvent.subject}}</h2>
+      <p>
+        {{status.currentEvent.startTimeString}} - {{status.currentEvent.endTimeString}}
+      </p>
     </div>
-  {{/status.currentEvent}}
-  <p>Available - {{status.available}}</p>
-  <p>{{status.durationMessage}}</p>
+  {{/status.available}}
+  {{#status.available}}
+    <div class="current-meeting">
+      <h2>Available</h2>
+      <p>{{status.durationMessage}}</p>
+    </div>
+  {{/status.available}}
 
-  <div>
+  <div class="upcoming-meetings">
     <h2>Upcoming Meetings</h2>
     <ul>
     {{#eventsList}}
       <li class="{{#isPassed}}passed{{/isPassed}}">
-        <span>{{subject}}</span>
-        <span>{{startTimeString}}</span>
-        <span>{{endTimeString}}</span>
-        <span>{{durationString}}</span>
+        <span class="meeting-time">
+          <span class="start">{{startTimeString}}</span>
+          <span class="end">to {{endTimeString}}</span>
+        </span>
+        <span class="meeting-detail">
+          <h3>{{subject}}</h3>
+          <p>{{durationString}}</p>
+        </span>
       </li>
     {{/eventsList}}
     </ul>

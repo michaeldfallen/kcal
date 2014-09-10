@@ -31,7 +31,8 @@ object RoomsListPresenter extends Controller with PlayImplicits {
 
   case class RoomsList(
     title: String,
-    rooms: Seq[RoomListItem]
+    rooms: Seq[RoomListItem],
+    fewRooms: Boolean
   ) extends mustache.roomsList
 
   object RoomsList {
@@ -50,7 +51,7 @@ object RoomsListPresenter extends Controller with PlayImplicits {
         }.seq
       )
       futureRoomList.map { list =>
-        RoomsList(title, list)
+        RoomsList(title, list, list.size < 5)
       }
     }
   }

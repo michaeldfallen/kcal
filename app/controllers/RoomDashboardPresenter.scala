@@ -29,7 +29,12 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
         events <- eventsList
         status <- roomStatus
       } yield {
-        Ok(RoomDashboard(details, events, status))
+        val displayEvents = if (status.available) {
+          events
+        } else {
+          events.tail
+        }
+        Ok(RoomDashboard(details, displayEvents, status))
       }
     }
   }

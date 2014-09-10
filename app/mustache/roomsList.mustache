@@ -2,10 +2,15 @@
 
 {{$title}}kcal - List of {{title}} rooms{{/title}}
 
+
+{{$js}}
+  <script type="text/javascript" src="/assets/javascripts/reload.js"></script>
+{{/js}}
+
 {{$content}}
 
-  <h1>{{title}}</h1>
-  <ul class="room-list">
+  <h1>{{title}} <img src="/assets/images/Kainos-Logo.png" class="k-logo"></img></h1>
+  <ul class="room-list {{#fewRooms}}few-rooms{{/fewRooms}}">
   {{#rooms}}
     <li class="room-list-item">
       <span class="name">
