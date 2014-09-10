@@ -74,6 +74,7 @@ a {
 
 .room-list .current-event {
   color: #7F8C8D;
+  /*color: #006435;*/
   display: block;
   position: absolute;
   bottom: 0.5em;
@@ -93,23 +94,25 @@ a {
 .room-list-item .status {
   z-index: 2;
   width: 30%;
-  background: #27AE60;
+  background: #00822D;
   padding: 0.5em;
   position: absolute;
   right: 0;
   top: 0;
   height: 3em;
+  border-left: 2px solid #000;
 }
 
 .room-list-item .status-busy {
   z-index: 2;
   width: 30%;
-  background: #C0392B;
+  background: #B10E1E;
   padding: 0.5em;
   position: absolute;
   right: 0;
   top: 0;
   height: 3em;
+  border-left: 2px solid #000;
 }
 
 .upcoming-meetings {
@@ -131,7 +134,8 @@ a {
   display: inline-block;
   height: 3em;
   float: left;
-  background: #C0392B;
+  background: #B10E1E;
+  border-right: 2px solid #000;
   padding: 0.5em;
 }
 
@@ -156,7 +160,7 @@ a {
 .current-meeting {
   height: 30%;
   margin: 1em;
-  border-left: 1em solid #27AE60;
+  border-left: 1em solid #00822D;
   padding: 0.5em 2em;
 }
 
@@ -169,7 +173,7 @@ a {
 }
 
 .current-meeting.busy {
-  border-left: 1em solid #C0392B;
+  border-left: 1em solid #B10E1E;
 }
 
 @media (min-width: 1280px) {

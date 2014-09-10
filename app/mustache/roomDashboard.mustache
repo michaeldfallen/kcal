@@ -7,7 +7,7 @@
 {{/js}}
 
 {{$content}}
-  <h1>{{room.shortDisplayName}} <img src="/assets/images/Kainos-Logo.png" class="k-logo" /></h1>
+  <h1>{{room.name}} <img src="/assets/images/Kainos-Logo.png" class="k-logo" /></h1>
 
   {{^status.available}}
     <div class="current-meeting busy">
@@ -25,7 +25,7 @@
   {{/status.available}}
 
   <div class="upcoming-meetings">
-    <h2>Upcoming Meetings</h2>
+    <h2>Upcoming Meetings today</h2>
     <ul>
     {{#eventsList}}
       <li class="{{#isPassed}}passed{{/isPassed}}">

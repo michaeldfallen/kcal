@@ -14,13 +14,13 @@ import config.Config
 object RoomsListPresenter extends Controller with PlayImplicits {
 
   case class RoomListItem(
-    room: RoomDetails,
+    room: BaseRoomDetail,
     url: String,
     status: RoomStatus
   )
 
   object RoomListItem {
-    def apply(room: RoomDetails, status: RoomStatus): RoomListItem = {
+    def apply(room: BaseRoomDetail, status: RoomStatus): RoomListItem = {
       RoomListItem(
         room = room,
         status = status,

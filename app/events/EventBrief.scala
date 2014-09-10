@@ -12,7 +12,7 @@ object PeriodFormat {
     new PeriodFormatterBuilder()
       .appendHours()
       .appendSuffix(" hr", " hrs")
-      .appendSeparator("", ", ")
+      .appendSeparator("", " ")
       .appendMinutes()
       .appendSuffix(" min", " mins")
       .toFormatter

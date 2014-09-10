@@ -5,10 +5,15 @@ import com.github.nscala_time.time.Imports._
 
 case class Room (
     val email: String
-) extends BaseRoomDetail
+) extends BaseRoomDetail {
+  def name = {
+    email.split('@').head
+  }
+}
 
 trait BaseRoomDetail {
   val email: String
+  def name: String
 }
 
 case class RoomDetails (
@@ -16,7 +21,7 @@ case class RoomDetails (
     displayName: String,
     alias: String
 ) extends BaseRoomDetail {
-  def shortDisplayName:String = {
+  def name:String = {
     displayName
       .replaceAllLiterally("Belfast", "")
       .replaceAllLiterally("London", "")

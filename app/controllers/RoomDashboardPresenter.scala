@@ -12,7 +12,7 @@ import events._
 object RoomDashboardPresenter extends Controller with PlayImplicits {
 
   case class RoomDashboard(
-    room: RoomDetails,
+    room: BaseRoomDetail,
     eventsList: Seq[EventBrief],
     status: RoomStatus
   ) extends mustache.roomDashboard
@@ -21,7 +21,7 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
     Action.async {
       val room = Room(email)
       val roomDetails = Rooms.roomDetails(room)
-      val eventsList = Events.todaysEvents(room)
+      val eventsList = Events.upcomingEvents(room)
       val roomStatus = RoomStatus(eventsList)
 
       for {

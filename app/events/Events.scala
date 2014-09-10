@@ -7,6 +7,7 @@ import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.JsArray
 import scala.util.{Failure, Success, Try}
+import org.joda.time.DateTime
 
 object Events {
 
@@ -21,9 +22,17 @@ object Events {
         case Success(js) => js
         case Failure(throwable) => {
           Office365.cacheBustEventsList(room)
-          throw throwable
+          Seq.empty[EventBrief]
         }
       }
+    }
+  }
+
+  def upcomingEvents(
+      room: BaseRoomDetail
+  ): Future[Seq[EventBrief]] = {
+    todaysEvents(room).map {events =>
+      events.filter(_.end isAfter DateTime.now)
     }
   }
 
