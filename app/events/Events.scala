@@ -12,40 +12,30 @@ import play.api.cache.Cache
 
 object Events {
 
-  def allEvents(
-      room: BaseRoomDetail
-  ): Future[Seq[EventBrief]] = {
-    Office365.eventsList(room) map { response =>
-      Try {
-        val js = (response.json \ "value").as[JsArray]
-        js.value map { EventBrief.bind(_).get }
-      } match {
-        case Success(js) => js
-        case Failure(throwable) => {
-          Seq.empty[EventBrief]
-        }
-      }
-    }
-  }
-
   def upcomingEvents(
       room: BaseRoomDetail
   ): Future[Seq[EventBrief]] = {
-    todaysEvents(room).map {events =>
-      events.filter(_.end isAfter DateTime.now)
-    }
+    Office365.upcomingEvents(room)
+      .map(EventBrief.bind)
+      .map { events =>
+        events.sortWith {
+          _.start isBefore _.start
+        }
+      }
   }
 
   def todaysEvents(
       room: BaseRoomDetail
   ): Future[Seq[EventBrief]] = {
-    allEvents(room).map { events =>
-      events.filter {
-        event => event.isToday
-      }.sortWith {
-        _.start isBefore _.start
+    Office365.upcomingEvents(room)
+      .map(EventBrief.bind)
+      .map { events =>
+        events.filter {
+          event => event.isToday
+        }.sortWith {
+          _.start isBefore _.start
+        }
       }
-    }
   }
 
   def bookRoomFor10Mins(

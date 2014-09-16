@@ -7,6 +7,11 @@ import org.joda.time.{Minutes, ReadablePeriod}
 import java.util.Locale
 import java.io.Writer
 
+import play.api.libs.json.JsArray
+import play.api.libs.ws.WSResponse
+
+import scala.util.{Failure, Success, Try}
+
 object PeriodFormat {
   val roughHoursMins = {
     new PeriodFormatterBuilder()
@@ -80,4 +85,14 @@ object EventBrief extends FormDelegate[EventBrief] {
       "IsCancelled" -> boolean
     ) (EventBrief.apply) (EventBrief.unapply)
   )
+
+  def bind(response: WSResponse): Seq[EventBrief] = {
+    Try {
+      val js = (response.json \ "value").as[JsArray]
+      js.value map { EventBrief.bind(_).get }
+    } match {
+      case Success(js) => js
+      case Failure(throwable) => Seq.empty[EventBrief]
+    }
+  }
 }

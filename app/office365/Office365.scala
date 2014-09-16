@@ -1,7 +1,11 @@
 package office365
 
+import com.github.nscala_time.time.Imports._
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.ws.{WS, WSResponse, WSAuthScheme}
 import scala.concurrent.Future
+import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import config.Config
 import play.api.libs.json._
@@ -18,6 +22,7 @@ trait Office365 {
   def username = Config.username
   def password = Config.password
   implicit def durationToInt(d: Duration): Int = d.toSeconds.toInt
+  def now = DateTime.now(DateTimeZone.UTC) .toString(ISODateTimeFormat.dateTimeNoMillis)
 
   def buildRequest(url: String) = WS.url(url).withAuth(username, password, WSAuthScheme.BASIC)
 
@@ -43,6 +48,17 @@ trait Office365 {
 
   def eventsList(room: BaseRoomDetail): Future[WSResponse] = {
     eventsResource(room.email).get()
+  }
+
+  def upcomingEvents(room: BaseRoomDetail): Future[WSResponse] = {
+    val end = s"End gt $now"
+    println("upcomingEvents " + end)
+    eventsResource(room.email)
+      .withQueryString(
+        "$filter" -> end,
+        "$top" -> "5",
+        "$select" -> "Subject,Start,End,Importance,IsAllDay,IsCancelled")
+      .get()
   }
 
   def bookRoom(room: RoomDetails, event: EventBrief) = {

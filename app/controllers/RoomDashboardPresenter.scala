@@ -23,7 +23,7 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
   def roomDashboard(email: String) = Action.async { request =>
     val room = Room(email)
     val roomDetails = Rooms.roomDetails(room)
-    val eventsList = Events.upcomingEvents(room)
+    val eventsList = Events.todaysEvents(room)
     val roomStatus = RoomStatus(eventsList)
 
     for {
