@@ -1,63 +1,48 @@
 package office365
 
-import play.api.libs.ws._
+import play.api.libs.ws.{WS, WSResponse, WSAuthScheme}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import config.Config
 import play.api.libs.json._
-import play.api.cache.Cache
 import play.api.Play.current
+import play.api.cache.Cache
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import rooms._
 import events.EventBrief
 
-object Office365 {
-  val baseUrl = "https://outlook.office365.com/EWS/OData"
-  val userUrl = s"$baseUrl/Users('%s')/"
-  val eventsUrl = s"$baseUrl/Users('%s')/Events/"
-  val eventDetailsUrl = s"$baseUrl/Users('%s')/Events('%s')/"
-  val bookingUrl = s"$baseUrl/Me/Events"
+object Office365 extends Office365
 
+trait Office365 {
+  val baseUrl = "https://outlook.office365.com/EWS/OData"
   def username = Config.username
   def password = Config.password
-
   implicit def durationToInt(d: Duration): Int = d.toSeconds.toInt
 
-  def cacheBustRoomDetails(room: BaseRoomDetail) = Cache.remove(s"office365.roomDetails.${room.email}")
-  def cacheBustEventsList(room: BaseRoomDetail) = {
-    Cache.remove(s"office365.eventsList.${room.email}")
-    Cache.remove(s"roomDashboard.${room.email}")
+  def buildRequest(url: String) = WS.url(url).withAuth(username, password, WSAuthScheme.BASIC)
+
+  def userResource(email: String) = {
+    buildRequest(s"$baseUrl/Users('$email')/")
+  }
+
+  def eventsResource(email: String) = {
+    buildRequest(s"$baseUrl/Users('$email')/Events/")
+  }
+
+  def eventDetailsResource(email: String, id: String) = {
+    buildRequest(s"$baseUrl/Users('$email')/Events('$id')/")
+  }
+
+  def bookingResource = {
+    buildRequest(s"$baseUrl/Me/Events")
   }
 
   def roomDetails(room: BaseRoomDetail): Future[WSResponse] = {
-    val cached = Cache.getAs[WSResponse](s"office365.roomDetails.${room.email}")
-    cached.map(Future(_)).getOrElse {
-      WS.url(userUrl.format(room.email))
-        .withAuth(username, password, WSAuthScheme.BASIC)
-        .get()
-        .map { response =>
-          if (response.status == 200) {
-            Cache.set(s"office365.roomDetails.${room.email}", response, 1.day)
-          }
-          response
-        }
-    }
+    userResource(room.email).get()
   }
 
   def eventsList(room: BaseRoomDetail): Future[WSResponse] = {
-    val cached = Cache.getAs[WSResponse](s"office365.eventsList.${room.email}")
-    cached.map(r => println(s"Fetched ${room.email} from cache"))
-    cached.map(Future(_)).getOrElse {
-      WS.url(eventsUrl.format(room.email))
-        .withAuth(username, password, WSAuthScheme.BASIC)
-        .get()
-        .map { response =>
-          if (response.status == 200) {
-            Cache.set(s"office365.eventsList.${room.email}", response, 5.minutes)
-          }
-          response
-        }
-    }
+    eventsResource(room.email).get()
   }
 
   def bookRoom(room: RoomDetails, event: EventBrief) = {
@@ -77,8 +62,6 @@ object Office365 {
         )
       )
     )
-    WS.url(bookingUrl)
-      .withAuth(username, password, WSAuthScheme.BASIC)
-      .post(json)
+    bookingResource.post(json)
   }
 }

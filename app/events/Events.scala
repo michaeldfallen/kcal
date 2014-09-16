@@ -22,7 +22,6 @@ object Events {
       } match {
         case Success(js) => js
         case Failure(throwable) => {
-          Office365.cacheBustEventsList(room)
           Seq.empty[EventBrief]
         }
       }
@@ -55,11 +54,6 @@ object Events {
     val in10Mins = DateTime.now + 10.minutes
     val roomDetails = Rooms.roomDetails(room)
     val endTime = upcomingEvents(room).map { events =>
-      println("In upcoming events:")
-      println(s"Target end time - ${in10Mins.toString()}")
-      events.foreach( event =>
-        println(s"${event.subject} ${event.startTimeString}")
-      )
       events.headOption match {
         case Some(event) => {
           if (event.start isBefore in10Mins) {
@@ -89,7 +83,6 @@ object Events {
           Office365.bookRoom(room, event).map {
             case response => {
               if (response.status == 200) {
-                Office365.cacheBustEventsList(room)
                 true
               } else {
                 throw new Exception("Room booking failed because: " + response.body)

@@ -19,9 +19,7 @@ object HomePresenter extends Controller with PlayImplicits {
       urls: Seq[RoomUrl] = urls
   ) extends mustache.home
 
-  def index = Cached(_ => "homePage", duration = 1) {
-    Action {
-      Ok(Home())
-    }
+  def index = Action {
+    Ok(Home())
   }
 }

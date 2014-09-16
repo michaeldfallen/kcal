@@ -20,32 +20,30 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
     exception: String
   ) extends mustache.roomDashboard
 
-  def roomDashboard(email: String) = Cached(_ => s"roomDashboard.$email", duration = 60) {
-    Action.async { request =>
-      val room = Room(email)
-      val roomDetails = Rooms.roomDetails(room)
-      val eventsList = Events.upcomingEvents(room)
-      val roomStatus = RoomStatus(eventsList)
+  def roomDashboard(email: String) = Action.async { request =>
+    val room = Room(email)
+    val roomDetails = Rooms.roomDetails(room)
+    val eventsList = Events.upcomingEvents(room)
+    val roomStatus = RoomStatus(eventsList)
 
-      for {
-        details <- roomDetails
-        events <- eventsList
-        status <- roomStatus
-      } yield {
-        val displayEvents = if (status.available) {
-          events
-        } else {
-          events.tail
-        }
-        Ok(RoomDashboard(
-          room = details,
-          eventsList = displayEvents,
-          status = status,
-          bookUrl = routes.EventsController.bookRoom(details.email).url,
-          message = request.flash.get("message") getOrElse "",
-          exception = request.flash.get("exception") getOrElse ""
-        ))
+    for {
+      details <- roomDetails
+      events <- eventsList
+      status <- roomStatus
+    } yield {
+      val displayEvents = if (status.available) {
+        events
+      } else {
+        events.tail
       }
+      Ok(RoomDashboard(
+        room = details,
+        eventsList = displayEvents,
+        status = status,
+        bookUrl = routes.EventsController.bookRoom(details.email).url,
+        message = request.flash.get("message") getOrElse "",
+        exception = request.flash.get("exception") getOrElse ""
+      ))
     }
   }
 }

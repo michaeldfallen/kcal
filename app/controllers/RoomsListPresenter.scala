@@ -56,23 +56,21 @@ object RoomsListPresenter extends Controller with PlayImplicits {
     }
   }
 
-  def roomsList(office: String) = Cached(_ => s"roomsList.$office", duration = 60) {
-    Action.async {
-      (office, Config.roomGroups.get(office)) match {
-        case ("all", _) => {
-          val roomsList = RoomsList("All Meeting Rooms", Rooms.allRooms())
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
+  def roomsList(office: String) = Action.async {
+    (office, Config.roomGroups.get(office)) match {
+      case ("all", _) => {
+        val roomsList = RoomsList("All Meeting Rooms", Rooms.allRooms())
+        roomsList.map { rooms =>
+          Ok(rooms)
         }
-        case (_, Some(id)) => {
-          val roomsList = RoomsList(s"${office.capitalize} Meeting Rooms", Rooms.rooms(id))
-          roomsList.map { rooms =>
-            Ok(rooms)
-          }
-        }
-        case _ => Future { Redirect(routes.HomePresenter.index()) }
       }
+      case (_, Some(id)) => {
+        val roomsList = RoomsList(s"${office.capitalize} Meeting Rooms", Rooms.rooms(id))
+        roomsList.map { rooms =>
+          Ok(rooms)
+        }
+      }
+      case _ => Future { Redirect(routes.HomePresenter.index()) }
     }
   }
 }

@@ -14,3 +14,10 @@ libraryDependencies ++= Seq(
   "com.github.nscala-time" %% "nscala-time" % "1.4.0",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 )
+
+fork in Test := true
+
+javaOptions in Test ++= Seq(
+  "-Xdebug",
+  "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+)
