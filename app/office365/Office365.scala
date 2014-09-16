@@ -43,7 +43,9 @@ trait Office365 {
   }
 
   def roomDetails(room: BaseRoomDetail): Future[WSResponse] = {
-    userResource(room.email).get()
+    userResource(room.email)
+      .withQueryString("$select" -> "DisplayName,Alias")
+      .get()
   }
 
   def eventsList(room: BaseRoomDetail): Future[WSResponse] = {
