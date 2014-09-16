@@ -72,7 +72,7 @@ object Events {
 
           Office365.bookRoom(room, event).map {
             case response => {
-              if (response.status == 200) {
+              if (response.status >= 200 && response.status <= 300) {
                 true
               } else {
                 throw new Exception("Room booking failed because: " + response.body)

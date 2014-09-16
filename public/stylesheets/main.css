@@ -195,3 +195,13 @@ a {
   background: #666;
   color: #eee;
 }
+
+.flash-message {
+  background: rgba(30, 30, 30, 0.9);
+  width: 100%;
+  font-size: 4.5em;
+  padding: 1em 0;
+  text-align: center;
+  position: absolute;
+  top: 1.5em;
+}

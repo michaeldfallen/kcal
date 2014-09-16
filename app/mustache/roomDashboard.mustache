@@ -27,6 +27,12 @@
     </div>
   {{/status.available}}
 
+  {{#message}}
+    <div class="current-meeting busy">
+      <h2>{{.}}</h2>
+    </div>
+  {{/message}}
+
   <div class="upcoming-meetings">
     <h2>Upcoming Meetings today</h2>
     <ul>
@@ -44,11 +50,6 @@
     {{/eventsList}}
     </ul>
   </div>
-
-  {{#message}}
-  <span class="flash-message">{{message}}</span>
-  <span class="flash-exception">{{exception}}</span>
-  {{/message}}
 
 {{/content}}
 
