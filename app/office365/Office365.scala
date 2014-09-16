@@ -53,11 +53,9 @@ trait Office365 {
   }
 
   def upcomingEvents(room: BaseRoomDetail): Future[WSResponse] = {
-    val end = s"End gt $now"
-    println("upcomingEvents " + end)
     eventsResource(room.email)
       .withQueryString(
-        "$filter" -> end,
+        "$filter" -> s"End gt $now",
         "$top" -> "5",
         "$select" -> "Subject,Start,End,Importance,IsAllDay,IsCancelled")
       .get()

@@ -9,6 +9,8 @@
 {{$content}}
   <h1>{{room.name}} <img src="/assets/images/Kainos-Logo.png" class="k-logo" /></h1>
 
+
+  {{^message}}
   {{^status.available}}
     <div class="current-meeting busy">
       <h2>{{status.currentEvent.subject}}</h2>
@@ -26,6 +28,7 @@
       </form>
     </div>
   {{/status.available}}
+  {{/message}}
 
   {{#message}}
     <div class="current-meeting busy">
