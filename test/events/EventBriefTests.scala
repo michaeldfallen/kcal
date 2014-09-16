@@ -29,4 +29,14 @@ class EventBriefTests extends FlatSpec with Matchers {
   it should "list mins and hrs" in {
     eventThatEndsIn(1.hour + 30.minutes).durationString should be("1 hr 30 mins")
   }
+
+  "EventBrief.endIsoString" should "print proper ISO datetime" in {
+    val date = new DateTime(1, 2, 3, 4, 5, 6, 7, DateTimeZone.UTC)
+    EventBrief("A meeting", DateTime.now, date, "", false, false).endIsoString should be("0001-02-03T04:05:06Z")
+  }
+
+  "EventBrief.startIsoString" should "print proper ISO datetime" in {
+    val date = new DateTime(1, 2, 3, 4, 5, 6, 7, DateTimeZone.UTC)
+    EventBrief("A meeting", date, DateTime.now, "", false, false).startIsoString should be("0001-02-03T04:05:06Z")
+  }
 }

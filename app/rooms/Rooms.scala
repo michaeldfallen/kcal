@@ -20,11 +20,9 @@ object Rooms {
     }
   }
 
-  def roomDetails(room: BaseRoomDetail): Future[BaseRoomDetail] = {
+  def roomDetails(room: BaseRoomDetail): Future[RoomDetails] = {
     Office365.roomDetails(room) map { response =>
       RoomDetails.bind(response.json).get
-    } recover {
-      case error => room
     }
   }
 }

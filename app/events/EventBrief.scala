@@ -1,6 +1,6 @@
 package events
 
-import org.joda.time.format.{PeriodPrinter, PeriodFormatterBuilder}
+import org.joda.time.format.{ISODateTimeFormat, PeriodPrinter, PeriodFormatterBuilder}
 import com.github.nscala_time.time.Imports._
 import play.FormDelegate
 import org.joda.time.{Minutes, ReadablePeriod}
@@ -36,8 +36,14 @@ case class EventBrief (
       end.toString(DateTimeFormat.forPattern("h:m a EEEEEEEEE"))
     }
   }
+  def endIsoString = {
+    end.toString(ISODateTimeFormat.dateTimeNoMillis())
+  }
   def startTimeString = {
     start.toString(DateTimeFormat.shortTime())
+  }
+  def startIsoString = {
+    start.toString(ISODateTimeFormat.dateTimeNoMillis())
   }
   def durationString = {
     val duration = (start to end).toPeriod

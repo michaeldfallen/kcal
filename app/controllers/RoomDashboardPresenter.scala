@@ -14,11 +14,14 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
   case class RoomDashboard(
     room: BaseRoomDetail,
     eventsList: Seq[EventBrief],
-    status: RoomStatus
+    status: RoomStatus,
+    bookUrl: String,
+    message: String,
+    exception: String
   ) extends mustache.roomDashboard
 
   def roomDashboard(email: String) = Cached(_ => s"roomDashboard.$email", duration = 60) {
-    Action.async {
+    Action.async { request =>
       val room = Room(email)
       val roomDetails = Rooms.roomDetails(room)
       val eventsList = Events.upcomingEvents(room)
@@ -34,7 +37,14 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
         } else {
           events.tail
         }
-        Ok(RoomDashboard(details, displayEvents, status))
+        Ok(RoomDashboard(
+          room = details,
+          eventsList = displayEvents,
+          status = status,
+          bookUrl = routes.EventsController.bookRoom(details.email).url,
+          message = request.flash.get("message") getOrElse "",
+          exception = request.flash.get("exception") getOrElse ""
+        ))
       }
     }
   }

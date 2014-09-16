@@ -181,3 +181,17 @@ a {
     font-size: 27px;
   }
 }
+
+.current-meeting input {
+  width: 10em;
+  border: 2px solid #999;
+  background: #eee;
+  font-size: 1.2em;
+  white-space: normal;
+  margin-top: 1em;
+}
+
+.current-meeting input:active {
+  background: #666;
+  color: #eee;
+}
