@@ -4,7 +4,7 @@ import config.Config
 import office365.Office365
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
 
 object Rooms {
   def allRooms(): Seq[Room] = {
@@ -24,5 +24,11 @@ object Rooms {
     Office365.roomDetails(room) map { response =>
       RoomDetails.bind(response.json).get
     }
+  }
+
+  def timezone(room: BaseRoomDetail): DateTimeZone = {
+    Config.timezones.get(room.email).map { timezoneString =>
+      DateTimeZone.forID(timezoneString)
+    } getOrElse DateTimeZone.forID("Europe/London")
   }
 }

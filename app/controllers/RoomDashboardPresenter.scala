@@ -1,5 +1,6 @@
 package controllers
 
+import org.joda.time.DateTimeZone
 import play.api._
 import play.api.mvc._
 import play.api.cache.Cached
@@ -13,7 +14,7 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
 
   case class RoomDashboard(
     room: BaseRoomDetail,
-    eventsList: Seq[EventBrief],
+    eventsList: Seq[EventBriefInTimeZone],
     status: RoomStatus,
     bookUrl: String,
     message: String,
@@ -22,13 +23,19 @@ object RoomDashboardPresenter extends Controller with PlayImplicits {
 
   def roomDashboard(email: String) = Action.async { request =>
     val room = Room(email)
+    val timezone = Rooms.timezone(room)
     val roomDetails = Rooms.roomDetails(room)
     val eventsList = Events.todaysEvents(room)
-    val roomStatus = RoomStatus(eventsList)
+    val eventsWithTimezone = eventsList map {
+      _ map { event =>
+        EventBriefInTimeZone(event, timezone)
+      }
+    }
+    val roomStatus = RoomStatus(eventsWithTimezone)
 
     for {
       details <- roomDetails
-      events <- eventsList
+      events <- eventsWithTimezone
       status <- roomStatus
     } yield {
       val displayEvents = if (status.available) {

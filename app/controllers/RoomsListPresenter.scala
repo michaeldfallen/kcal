@@ -1,5 +1,6 @@
 package controllers
 
+import org.joda.time.DateTimeZone
 import play.api._
 import play.api.mvc._
 import play.api.cache.Cached
@@ -39,9 +40,16 @@ object RoomsListPresenter extends Controller with PlayImplicits {
     def apply(title: String, rooms: Seq[Room]): Future[RoomsList] = {
       val futureRoomList = Future.sequence(
         rooms.par.map { room =>
+          val timezone = Rooms.timezone(room)
           val details = Rooms.roomDetails(room)
           val events = Events.todaysEvents(room)
-          val status = RoomStatus(events)
+          val eventsWithTimezone = events map {
+            _ map { event =>
+              EventBriefInTimeZone(event, timezone)
+            }
+          }
+
+          val status = RoomStatus(eventsWithTimezone)
           for {
             roomStatus <- status
             roomDetails <- details

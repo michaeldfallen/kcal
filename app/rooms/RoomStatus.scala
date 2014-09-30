@@ -1,6 +1,6 @@
 package rooms
 
-import events.EventBrief
+import events.{EventBriefInTimeZone, EventBrief}
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import org.joda.time.format.PeriodFormatterBuilder
@@ -21,7 +21,7 @@ object PeriodFormat {
 
 case class AvailableOrBusyStatus (
     available: Boolean,
-    currentEvent: Option[EventBrief],
+    currentEvent: Option[EventBriefInTimeZone],
     duration: Interval
 ) extends RoomStatus {
 
@@ -46,13 +46,13 @@ case class FreeAllDayStatus () extends RoomStatus {
 
 trait RoomStatus {
   val available: Boolean
-  val currentEvent: Option[EventBrief]
+  val currentEvent: Option[EventBriefInTimeZone]
   def durationMessage: String
 }
 
 object RoomStatus {
   def apply(
-      eventsList: Future[Seq[EventBrief]]
+      eventsList: Future[Seq[EventBriefInTimeZone]]
   ): Future[RoomStatus] = {
     eventsList map { list =>
       val sorted = list sortWith {
@@ -63,14 +63,14 @@ object RoomStatus {
         _.end isAfter DateTime.now
       }
       sorted.headOption map {
-        case event @ EventBrief(_, start, end, _, _, _) => {
+        case event => {
           val now = DateTime.now
 
-          val available = start isAfter now
+          val available = event.start isAfter now
           val duration = if (available) {
-            now to start
+            now to event.start
           } else {
-            now to end
+            now to event.end
           }
 
           AvailableOrBusyStatus(available, Some(event), duration)

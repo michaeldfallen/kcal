@@ -1,10 +1,11 @@
 package rooms
 
+import config.Config
 import play.FormDelegate
 import com.github.nscala_time.time.Imports._
 
 case class Room (
-    val email: String
+    email: String
 ) extends BaseRoomDetail {
   def name = {
     email.split('@').head
@@ -17,7 +18,7 @@ trait BaseRoomDetail {
 }
 
 case class RoomDetails (
-    val email: String,
+    email: String,
     displayName: String,
     alias: String
 ) extends BaseRoomDetail {

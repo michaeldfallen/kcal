@@ -24,6 +24,31 @@ object PeriodFormat {
   }
 }
 
+case class EventBriefInTimeZone(
+    event: EventBrief,
+    timezone: DateTimeZone
+) {
+  def endTimeString = {
+    event.endTimeString(timezone)
+  }
+
+  def startTimeString = {
+    event.startTimeString(timezone)
+  }
+
+  def subject = event.subject
+  def start = event.start
+  def end = event.end
+  def importance = event.importance
+  def isAllDay = event.isAllDay
+  def isCancelled = event.isCancelled
+  def endIsoString = event.endIsoString
+  def startIsoString = event.startIsoString
+  def durationString = event.durationString
+  def isToday = event.isToday
+  def isPassed = event.isPassed
+}
+
 case class EventBrief (
     subject: String,
     start: DateTime,
@@ -32,20 +57,20 @@ case class EventBrief (
     isAllDay: Boolean,
     isCancelled: Boolean
 ) {
-  def endTimeString = {
+  def endTimeString(timezone: DateTimeZone) = {
     if (end.toLocalDate.equals(LocalDate.today)) {
-      end.toString(DateTimeFormat.shortTime())
+      end.toString(DateTimeFormat.shortTime().withZone(timezone))
     } else if (end.toLocalDate.equals(LocalDate.tomorrow)) {
-      end.toString(DateTimeFormat.shortTime()) + " tomorrow"
+      end.toString(DateTimeFormat.shortTime().withZone(timezone)) + " tomorrow"
     } else {
-      end.toString(DateTimeFormat.forPattern("h:m a EEEEEEEEE"))
+      end.toString(DateTimeFormat.forPattern("h:m a EEEEEEEEE").withZone(timezone))
     }
   }
   def endIsoString = {
     end.toString(ISODateTimeFormat.dateTimeNoMillis())
   }
-  def startTimeString = {
-    start.toString(DateTimeFormat.shortTime())
+  def startTimeString(timezone: DateTimeZone) = {
+    start.toString(DateTimeFormat.shortTime().withZone(timezone))
   }
   def startIsoString = {
     start.toString(ISODateTimeFormat.dateTimeNoMillis())

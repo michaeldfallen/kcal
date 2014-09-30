@@ -6,13 +6,6 @@ import play.api.libs.Crypto
 object Config {
   private lazy val configuration = play.Play.application.configuration
 
-  lazy val belfastRoomsList = roomsList("kcal.rooms.belfast")
-  lazy val londonRoomsList = roomsList("kcal.rooms.london")
-  lazy val gdanskRoomsList = roomsList("kcal.rooms.gdansk")
-  lazy val derryRoomsList = roomsList("kcal.rooms.derry")
-  lazy val bristolRoomsList = roomsList("kcal.rooms.bristol")
-  lazy val dublinRoomsList = roomsList("kcal.rooms.dublin")
-
   def roomsList(key:String): Seq[String] = {
     configuration
       .getList(key)
@@ -21,7 +14,17 @@ object Config {
   }
 
   lazy val roomGroups: Map[String, String] = {
-    configuration.getConfig("kcal.rooms").keys().map { key => key -> s"kcal.rooms.$key" }.toMap
+    configuration.getConfig("kcal.rooms").subKeys().map { key => key -> s"kcal.rooms.$key.rooms" }.toMap
+  }
+
+  lazy val timezones: Map[String, String] = {
+    configuration.getConfig("kcal.rooms").subKeys().map { key =>
+      val rooms = roomsList(s"kcal.rooms.$key.rooms")
+      val timezone = configuration.getString(s"kcal.rooms.$key.timezone")
+      rooms.map { roomEmail =>
+        roomEmail -> timezone
+      }.toMap
+    }.flatten.toMap.filter { case (key, value) => value != "" }
   }
 
   def password: String = {
