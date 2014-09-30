@@ -23,6 +23,14 @@ trait Office365 {
   def password = Config.password
   implicit def durationToInt(d: Duration): Int = d.toSeconds.toInt
   def now = DateTime.now(DateTimeZone.UTC) .toString(ISODateTimeFormat.dateTimeNoMillis)
+  def midnight = {
+    DateTime
+      .now(DateTimeZone.UTC)
+      .withHourOfDay(23)
+      .withMinuteOfHour(59)
+      .withSecondOfMinute(59)
+      .toString(ISODateTimeFormat.dateTimeNoMillis())
+  }
 
   def buildRequest(url: String) = WS.url(url).withAuth(username, password, WSAuthScheme.BASIC)
 
@@ -55,8 +63,8 @@ trait Office365 {
   def upcomingEvents(room: BaseRoomDetail): Future[WSResponse] = {
     eventsResource(room.email)
       .withQueryString(
-        "$filter" -> s"End gt $now",
-        "$top" -> "5",
+        "$filter" -> s"Start lt $midnight and End gt $now",
+        "$top" -> "20",
         "$select" -> "Subject,Start,End,Importance,IsAllDay,IsCancelled")
       .get()
   }
